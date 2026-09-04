@@ -57,8 +57,8 @@ const ASSETS = {
 
     // آیکون دکمه‌های موبایل (تصاویر PNG 1024x1024)
     mobileButtons: {
-        left: "https://s6.uupload.ir/files/f97eb6cf-fbaa-4171-91d2-c3760e3e4c42_xfp6.png",
-        right: "https://s6.uupload.ir/files/2e83daed-6c83-4ec4-a624-d61b618f01ed_euqw.png",
+        left: "https://s6.uupload.ir/files/2e83daed-6c83-4ec4-a624-d61b618f01ed_euqw.png",
+        right: "https://s6.uupload.ir/files/f97eb6cf-fbaa-4171-91d2-c3760e3e4c42_xfp6.png",
         jump: "https://s6.uupload.ir/files/e4258620-06a3-441b-bc1a-304c35276f0d_oz1e.png",
         attack: "https://s6.uupload.ir/files/70d5edc2-2c6c-41d8-9d92-d10649d359bb_37pe.png"
     }
