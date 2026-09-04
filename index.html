@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Asi Khersi - Endless Chase</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="game-wrapper">
+    <!-- بوم اصلی بازی -->
+    <canvas id="gameCanvas" width="1920" height="1080"></canvas>
+
+    <!-- لودینگ اولیه -->
+    <div id="loading-screen" class="overlay-screen active">
+        <div class="loader-content">
+            <h2 id="loading-text">در حال بارگذاری بازی...</h2>
+            <div class="loader-bar"><div id="loader-progress"></div></div>
+        </div>
+    </div>
+
+    <!-- پخش‌کننده موشن گرافیک‌ها -->
+    <div id="motion-container" class="overlay-screen hidden">
+        <video id="motion-video" playsinline preload="auto"></video>
+        <button id="skip-motion-btn" class="skip-btn">رد کردن ⏭</button>
+    </div>
+
+    <!-- منوی اصلی (با بلور پس‌زمینه و اوورلی تیره) -->
+    <div id="main-menu" class="overlay-screen hidden">
+        <div class="menu-content">
+            <div class="menu-buttons-grid">
+                <button id="btn-start" class="asset-btn" title="شروع بازی"></button>
+                <button id="btn-support-creator" class="asset-btn" title="حمایت از سازنده"></button>
+                <button id="btn-support-asi" class="asset-btn" title="حمایت از اسی خرسی"></button>
+                <button id="btn-language" class="asset-btn" title="تغییر زبان"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- رابط کاربری بازی (HUD) -->
+    <div id="hud" class="hidden">
+        <div class="record-box">
+            <div class="stat"><span id="lbl-distance">مسافت</span>: <span id="val-distance">0</span> <span id="lbl-unit-m">متر</span></div>
+            <div class="stat"><span id="lbl-best">بهترین</span>: <span id="val-best">0</span> <span id="lbl-unit-m2">متر</span></div>
+        </div>
+        <div id="new-record-banner" class="hidden">رکورد جدید!</div>
+    </div>
+
+    <!-- صفحه پایان بازی (Game Over) -->
+    <div id="game-over-screen" class="overlay-screen hidden">
+        <div class="modal-box">
+            <h1 id="lbl-game-over">بازی تمام شد</h1>
+            <div class="result-stats">
+                <p><span id="lbl-final-distance">مسافت طی شده</span>: <span id="final-distance">0</span> <span id="lbl-unit-m3">متر</span></p>
+                <p><span id="lbl-final-best">بهترین رکورد</span>: <span id="final-best">0</span> <span id="lbl-unit-m4">متر</span></p>
+            </div>
+            <button id="btn-restart" class="cartoon-btn">شروع مجدد</button>
+        </div>
+    </div>
+
+    <!-- کنترل‌های موبایل (Landscape) -->
+    <div id="mobile-controls" class="hidden">
+        <div class="mobile-group left-group">
+            <button id="m-btn-left" class="mobile-btn" aria-label="Left"></button>
+            <button id="m-btn-right" class="mobile-btn" aria-label="Right"></button>
+        </div>
+        <div class="mobile-group right-group">
+            <button id="m-btn-attack" class="mobile-btn" aria-label="Attack"></button>
+            <button id="m-btn-jump" class="mobile-btn" aria-label="Jump"></button>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
