@@ -12,17 +12,25 @@
     <!-- بوم اصلی بازی -->
     <canvas id="gameCanvas" width="1920" height="1080"></canvas>
 
+    <!-- دکمه تمام صفحه -->
+    <button id="btn-fullscreen" class="fullscreen-btn" title="تمام صفحه" aria-label="Fullscreen">
+        <svg viewBox="0 0 24 24" width="26" height="26" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+        </svg>
+    </button>
+
     <!-- لودینگ اولیه -->
     <div id="loading-screen" class="overlay-screen active">
         <div class="loader-content">
             <h2 id="loading-text">در حال بارگذاری بازی...</h2>
             <div class="loader-bar"><div id="loader-progress"></div></div>
+            <button id="btn-user-start" class="cartoon-btn hidden" style="margin-top:20px;">ورود به بازی 🎮</button>
         </div>
     </div>
 
     <!-- پخش‌کننده موشن گرافیک‌ها -->
     <div id="motion-container" class="overlay-screen hidden">
-        <video id="motion-video" playsinline preload="auto"></video>
+        <video id="motion-video" playsinline webkit-playsinline preload="auto"></video>
         <button id="skip-motion-btn" class="skip-btn">رد کردن ⏭</button>
     </div>
 
@@ -47,7 +55,7 @@
         <div id="new-record-banner" class="hidden">رکورد جدید!</div>
     </div>
 
-    <!-- صفحه پایان بازی (Game Over) -->
+    <!-- صفحه پایان بازی (Game Over) همراه با دکمه شروع مجدد و رفتن به منو -->
     <div id="game-over-screen" class="overlay-screen hidden">
         <div class="modal-box">
             <h1 id="lbl-game-over">بازی تمام شد</h1>
@@ -55,19 +63,24 @@
                 <p><span id="lbl-final-distance">مسافت طی شده</span>: <span id="final-distance">0</span> <span id="lbl-unit-m3">متر</span></p>
                 <p><span id="lbl-final-best">بهترین رکورد</span>: <span id="final-best">0</span> <span id="lbl-unit-m4">متر</span></p>
             </div>
-            <button id="btn-restart" class="cartoon-btn">شروع مجدد</button>
+            <div class="game-over-actions">
+                <button id="btn-restart" class="cartoon-btn">شروع مجدد</button>
+                <button id="btn-to-menu" class="cartoon-btn secondary-btn">منوی اصلی</button>
+            </div>
         </div>
     </div>
 
-    <!-- کنترل‌های موبایل (Landscape) -->
+    <!-- کنترل‌های موبایل دقیقاً طبق عکس ارسالی روی چمن -->
     <div id="mobile-controls" class="hidden">
+        <!-- سمت چپ: دکمه چپ سپس راست -->
         <div class="mobile-group left-group">
             <button id="m-btn-left" class="mobile-btn" aria-label="Left"></button>
             <button id="m-btn-right" class="mobile-btn" aria-label="Right"></button>
         </div>
+        <!-- سمت راست: دکمه پرش سپس حمله (شمشیر) -->
         <div class="mobile-group right-group">
-            <button id="m-btn-attack" class="mobile-btn" aria-label="Attack"></button>
             <button id="m-btn-jump" class="mobile-btn" aria-label="Jump"></button>
+            <button id="m-btn-attack" class="mobile-btn" aria-label="Attack"></button>
         </div>
     </div>
 </div>
