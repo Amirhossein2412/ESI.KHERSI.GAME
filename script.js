@@ -8,10 +8,10 @@ const ASSETS = {
 
     // موشن گرافیک‌های ویدیویی ۱۶:۹
     videos: {
-        creatorIntro: "https://uupload.ir/view/brown_bear_eating_honey_202608312215_h6j4.mp4/", // موشن ۱۰ ثانیه‌ای سازنده
-        storyMotion: "https://uupload.ir/view/461d9501-976e-4e70-8bfb-f2df01d5e309_4ct6.mp4/",  // موشن داستانی قبل از شروع گیم‌پلی
-        honeyCatch: "https://uupload.ir/view/461d9501-976e-4e70-8bfb-f2df01d5e309_1_5iqq.mp4/",   // موشن هنگام گرفتن عسل
-        gameOver: "https://uupload.ir/view/461d9501-976e-4e70-8bfb-f2df01d5e309_2_1m1n.mp4/"      // موشن گیم اور بعد از مرگ خرس
+        creatorIntro: "video1.mp4", // موشن ۱۰ ثانیه‌ای سازنده
+        storyMotion: "video2.mp4",  // موشن داستانی قبل از شروع گیم‌پلی
+        honeyCatch: "video3.mp4",   // موشن هنگام گرفتن عسل
+        gameOver: "video4.mp4"      // موشن گیم اور بعد از مرگ خرس
     },
 
     // شخصیت Bear (تصاویر PNG 1024x1024)
@@ -57,11 +57,17 @@ const ASSETS = {
 
     // آیکون دکمه‌های موبایل (تصاویر PNG 1024x1024)
     mobileButtons: {
-        left: "https://s6.uupload.ir/files/2e83daed-6c83-4ec4-a624-d61b618f01ed_euqw.png",
-        right: "https://s6.uupload.ir/files/f97eb6cf-fbaa-4171-91d2-c3760e3e4c42_xfp6.png",
+        left: "https://s6.uupload.ir/files/f97eb6cf-fbaa-4171-91d2-c3760e3e4c42_xfp6.png",
+        right: "https://s6.uupload.ir/files/2e83daed-6c83-4ec4-a624-d61b618f01ed_euqw.png",
         jump: "https://s6.uupload.ir/files/e4258620-06a3-441b-bc1a-304c35276f0d_oz1e.png",
         attack: "https://s6.uupload.ir/files/70d5edc2-2c6c-41d8-9d92-d10649d359bb_37pe.png"
     }
+};
+
+// لینک‌های حمایت و دونیت جهت باز شدن در تب جدید
+const DONATE_LINKS = {
+    creator: "",
+    asiKhersi: ""
 };
 
 // ==========================================
@@ -70,14 +76,17 @@ const ASSETS = {
 const V_WIDTH = 1920;
 const V_HEIGHT = 1080;
 
-// زمین ۱/۹ بک‌گراند را اشغال می‌کند
+// زمین ۱/۹ پایینی بک‌گراند را اشغال می‌کند
 const GROUND_HEIGHT = V_HEIGHT / 9; // 120px
 const GROUND_Y = V_HEIGHT - GROUND_HEIGHT; // 960px
 
-// آفست ارتفاع جهت قرارگیری طبیعی کف پای کاراکتر روی زمین به دلیل شفافیت دور PNG
-const GROUND_OFFSET = 25; 
+// آفست ارتفاع کاراکترها روی خط چمن به دلیل شفافیت دور تصویر PNG
+const GROUND_OFFSET = 30; 
 
-// وضعیت‌های مجاز بازی طبق دستورالعمل (فقط همین ۶ وضعیت)
+// آفست ارتفاع پلتفرم: پایین‌تر قرار گرفتن پلتفرم تا دسترس باشد
+const PLATFORM_Y_OFFSET = 130; 
+
+// فقط همین ۶ وضعیت مجاز طبق پرامپت
 const STATES = {
     CREATOR_INTRO: 'CREATOR_INTRO',
     MENU: 'MENU',
@@ -87,7 +96,7 @@ const STATES = {
     GAME_OVER: 'GAME_OVER'
 };
 
-// دیکشنری دو زبانه (پیش‌فرض: فارسی RTL)
+// دیکشنری دو زبانه (پیش‌فرض فارسی RTL)
 const I18N = {
     fa: {
         dir: 'rtl',
@@ -96,6 +105,7 @@ const I18N = {
         newRecord: 'رکورد جدید!',
         gameOver: 'بازی تمام شد',
         restart: 'شروع مجدد',
+        menu: 'منوی اصلی',
         m: 'متر',
         finalDist: 'مسافت طی شده'
     },
@@ -106,6 +116,7 @@ const I18N = {
         newRecord: 'NEW RECORD!',
         gameOver: 'Game Over',
         restart: 'Restart',
+        menu: 'Main Menu',
         m: 'm',
         finalDist: 'Distance Run'
     }
@@ -114,16 +125,16 @@ const I18N = {
 let currentLang = 'fa';
 let currentState = STATES.CREATOR_INTRO;
 
-// منابع بارگذاری شده
 const loadedImages = {};
 let totalAssetsToLoad = 0;
 let loadedAssetsCount = 0;
 
-// المان‌های DOM
+// المنت‌های DOM
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const loadingScreen = document.getElementById('loading-screen');
 const loaderProgress = document.getElementById('loader-progress');
+const btnUserStart = document.getElementById('btn-user-start');
 const motionContainer = document.getElementById('motion-container');
 const motionVideo = document.getElementById('motion-video');
 const skipMotionBtn = document.getElementById('skip-motion-btn');
@@ -131,9 +142,23 @@ const mainMenu = document.getElementById('main-menu');
 const hud = document.getElementById('hud');
 const gameOverScreen = document.getElementById('game-over-screen');
 const mobileControls = document.getElementById('mobile-controls');
+const btnFullscreen = document.getElementById('btn-fullscreen');
 
-// کلیدها و ورودی‌ها
 const keys = { left: false, right: false, jump: false, attack: false };
+
+// ==========================================
+// FULLSCREEN HANDLER
+// ==========================================
+btnFullscreen.onclick = () => {
+    const elem = document.documentElement;
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+        if (elem.requestFullscreen) elem.requestFullscreen();
+        else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+    } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+    }
+};
 
 // ==========================================
 // ASSET LOADER
@@ -144,7 +169,7 @@ function initAssetLoader(onComplete) {
     function collectAssets(obj) {
         for (let key in obj) {
             if (typeof obj[key] === 'string' && obj[key].trim() !== '') {
-                assetList.push({ key: key, url: obj[key], ref: obj });
+                assetList.push({ key: key, url: obj[key] });
             } else if (typeof obj[key] === 'object' && obj[key] !== null) {
                 collectAssets(obj[key]);
             }
@@ -152,19 +177,19 @@ function initAssetLoader(onComplete) {
     }
 
     collectAssets(ASSETS);
-
-    totalAssetsToLoad = assetList.length;
-
-    // اعمال دکمه‌های منو و موبایل به استایل المان‌ها
     applyUiButtonAssets();
+
+    // فیلتر کردن تصاویر (ویدیوها مستقیماً با پلیر هندل می‌شوند)
+    const imageAssets = assetList.filter(item => !item.url.endsWith('.mp4') && !item.url.endsWith('.webm'));
+    totalAssetsToLoad = imageAssets.length;
 
     if (totalAssetsToLoad === 0) {
         loaderProgress.style.width = '100%';
-        setTimeout(onComplete, 400);
+        onComplete();
         return;
     }
 
-    assetList.forEach(item => {
+    imageAssets.forEach(item => {
         const img = new Image();
         img.src = item.url;
         img.onload = () => {
@@ -173,14 +198,14 @@ function initAssetLoader(onComplete) {
             const pct = Math.floor((loadedAssetsCount / totalAssetsToLoad) * 100);
             loaderProgress.style.width = `${pct}%`;
             if (loadedAssetsCount >= totalAssetsToLoad) {
-                setTimeout(onComplete, 300);
+                onComplete();
             }
         };
         img.onerror = () => {
-            console.error(`خطا در بارگذاری تصویر: ${item.url}`);
+            console.warn(`تصویر یافت نشد یا در حال بارگذاری است: ${item.url}`);
             loadedAssetsCount++;
             if (loadedAssetsCount >= totalAssetsToLoad) {
-                setTimeout(onComplete, 300);
+                onComplete();
             }
         };
     });
@@ -203,7 +228,7 @@ function getImage(url) {
 }
 
 // ==========================================
-// GAME STATE ENTITIES
+// GAME ENTITIES
 // ==========================================
 let cameraX = 0;
 let distanceTraveled = 0;
@@ -211,7 +236,6 @@ let bestRecord = parseInt(localStorage.getItem('asi_khersi_best') || '0', 10);
 let hasTriggeredNewRecord = false;
 let isHoneyDeleted = false;
 
-// خرس (Bear)
 const bear = {
     x: 200,
     y: 0,
@@ -221,14 +245,13 @@ const bear = {
     vy: 0,
     speed: 10,
     isGrounded: false,
-    state: 'idle', // idle, runOpen, runClosed, jump, attack, death, catchHoney
+    state: 'idle',
     attackTimer: 0,
     runAnimTimer: 0,
     runStep: false,
     deathTimer: 0
 };
 
-// عسل (Honey)
 const honey = {
     x: 1000,
     y: 0,
@@ -236,15 +259,13 @@ const honey = {
     h: 160,
     vx: 0,
     vy: 0,
-    // سرعت عسل ۹۰ تا ۹۵ درصد خرس است
-    speed: 9.2,
+    speed: 9.2, // ۹۰ تا ۹۵ درصد سرعت خرس
     isGrounded: false,
     state: 'runOpen',
     runAnimTimer: 0,
     runStep: false
 };
 
-// زنبورها و موانع فعال
 let bees = [];
 let obstacles = [];
 let nextSpawnDistance = 600;
@@ -255,37 +276,35 @@ let nextSpawnDistance = 600;
 window.addEventListener('DOMContentLoaded', () => {
     updateLanguage(currentLang);
     initAssetLoader(() => {
-        loadingScreen.classList.add('hidden');
-        playCreatorIntro();
+        document.getElementById('loading-text').textContent = 'آماده اجرا!';
+        btnUserStart.classList.remove('hidden');
+        btnUserStart.onclick = () => {
+            loadingScreen.classList.add('hidden');
+            playCreatorIntro();
+        };
     });
     setupInputListeners();
 });
 
 // ==========================================
-// MOTION GRAPHICS CONTROLLER
+// MOTION GRAPHICS CONTROLLER (پشتیبانی کامل گیتهاب)
 // ==========================================
 function playMotion(url, onEnded) {
     if (!url || url.trim() === '') {
-        // در صورت عدم قرار دادن لینک ویدیو، یک شبیه‌سازی کوتاه انجام می‌شود
-        motionContainer.classList.remove('hidden');
-        setTimeout(() => {
-            motionContainer.classList.add('hidden');
-            onEnded();
-        }, 1000);
+        onEnded();
         return;
     }
 
     motionContainer.classList.remove('hidden');
     motionVideo.src = url;
     motionVideo.currentTime = 0;
-    motionVideo.play().catch(e => {
-        console.warn('پخش خودکار ویدیو مسدود شد؛ رد می‌شود.', e);
-        motionContainer.classList.add('hidden');
-        onEnded();
-    });
 
+    let isFinished = false;
     const finish = () => {
+        if (isFinished) return;
+        isFinished = true;
         motionVideo.onended = null;
+        motionVideo.onerror = null;
         skipMotionBtn.onclick = null;
         motionVideo.pause();
         motionContainer.classList.add('hidden');
@@ -294,6 +313,21 @@ function playMotion(url, onEnded) {
 
     motionVideo.onended = finish;
     skipMotionBtn.onclick = finish;
+
+    // جلوگیری از مسدود شدن بازی در صورت لود نشدن ویدیو
+    motionVideo.onerror = () => {
+        console.warn(`ویدیو در آدرس ${url} اجرا نشد.`);
+        finish();
+    };
+
+    const playPromise = motionVideo.play();
+    if (playPromise !== undefined) {
+        playPromise.catch(error => {
+            console.warn('تلاش برای پخش بدون صدا جهت سازگاری با مرورگر...', error);
+            motionVideo.muted = true;
+            motionVideo.play().catch(() => finish());
+        });
+    }
 }
 
 function playCreatorIntro() {
@@ -360,10 +394,10 @@ function resetGame() {
 }
 
 // ==========================================
-// CONTROLS & EVENTS
+// CONTROLS & LISTENERS
 // ==========================================
 function setupInputListeners() {
-    // کلیدهای PC
+    // کلیدهای کامپیوتر
     window.addEventListener('keydown', (e) => {
         if (currentState !== STATES.PLAYING) return;
         if (e.code === 'KeyA' || e.code === 'ArrowLeft') keys.left = true;
@@ -378,20 +412,23 @@ function setupInputListeners() {
         if (e.code === 'Space' || e.code === 'KeyW' || e.code === 'ArrowUp') keys.jump = false;
     });
 
-    // دکمه‌های منو
+    // دکمه‌های منوی اصلی و لینک دونیت
     document.getElementById('btn-start').onclick = startStoryThenPlay;
     document.getElementById('btn-support-creator').onclick = () => {
-        alert('از حمایت شما از سازنده صمیمانه سپاسگزاریم!');
+        if (DONATE_LINKS.creator) window.open(DONATE_LINKS.creator, '_blank');
+        else alert('از حمایت شما از سازنده سپاسگزاریم!');
     };
     document.getElementById('btn-support-asi').onclick = () => {
-        alert('حمایت از اسی خرسی ثبت شد! 🐻🍯');
+        if (DONATE_LINKS.asiKhersi) window.open(DONATE_LINKS.asiKhersi, '_blank');
+        else alert('حمایت از اسی خرسی ثبت شد! 🐻🍯');
     };
     document.getElementById('btn-language').onclick = toggleLanguage;
 
-    // دکمه ری‌استارت
+    // دکمه‌های صفحه Game Over
     document.getElementById('btn-restart').onclick = startGameplay;
+    document.getElementById('btn-to-menu').onclick = openMainMenu;
 
-    // دکمه‌های لمسی موبایل
+    // دکمه‌های لمسی موبایل مطابق تصویر
     bindTouchButton('m-btn-left', () => keys.left = true, () => keys.left = false);
     bindTouchButton('m-btn-right', () => keys.right = true, () => keys.right = false);
     bindTouchButton('m-btn-jump', () => keys.jump = true, () => keys.jump = false);
@@ -400,14 +437,14 @@ function setupInputListeners() {
 
 function bindTouchButton(id, onDown, onUp) {
     const btn = document.getElementById(id);
-    btn.addEventListener('touchstart', (e) => { e.preventDefault(); onDown(); });
-    btn.addEventListener('touchend', (e) => { e.preventDefault(); onUp(); });
-    btn.addEventListener('touchcancel', (e) => { e.preventDefault(); onUp(); });
+    btn.addEventListener('touchstart', (e) => { e.preventDefault(); onDown(); }, { passive: false });
+    btn.addEventListener('touchend', (e) => { e.preventDefault(); onUp(); }, { passive: false });
+    btn.addEventListener('touchcancel', (e) => { e.preventDefault(); onUp(); }, { passive: false });
 }
 
 function triggerBearAttack() {
     if (bear.state !== 'death' && bear.state !== 'catchHoney') {
-        bear.attackTimer = 18; // مدت زمان انیمیشن حمله
+        bear.attackTimer = 18;
         bear.state = 'attack';
     }
 }
@@ -433,31 +470,30 @@ function updateLanguage(lang) {
     document.getElementById('lbl-final-distance').textContent = dict.finalDist;
     document.getElementById('lbl-final-best').textContent = dict.best;
     document.getElementById('btn-restart').textContent = dict.restart;
+    document.getElementById('btn-to-menu').textContent = dict.menu;
 }
 
 // ==========================================
-// GAMEPLAY LOGIC & UPDATES
+// GAMEPLAY LOGIC
 // ==========================================
 function updateGame() {
     if (currentState !== STATES.PLAYING) return;
 
-    // ۱. به‌روزرسانی Bear
+    // ۱. کاراکتر Bear
     if (bear.state !== 'death' && bear.state !== 'catchHoney') {
         if (keys.right) {
             bear.vx = bear.speed;
         } else if (keys.left) {
-            bear.vx = -bear.speed * 0.7; // حرکت رو به عقب کمی آرام‌تر است
+            bear.vx = -bear.speed * 0.7;
         } else {
             bear.vx = 0;
         }
 
-        // پرش
         if (keys.jump && bear.isGrounded) {
             bear.vy = -20;
             bear.isGrounded = false;
         }
 
-        // انیمیشن‌های Bear
         if (bear.attackTimer > 0) {
             bear.attackTimer--;
             bear.state = 'attack';
@@ -475,12 +511,10 @@ function updateGame() {
         }
     }
 
-    // فیزیک Bear
-    bear.vy += 0.9; // جاذبه
+    bear.vy += 0.9;
     bear.x += bear.vx;
     bear.y += bear.vy;
 
-    // پلتفرم‌ها و برخورد با زمین
     const currentGroundY = GROUND_Y - bear.h + GROUND_OFFSET;
     if (bear.y >= currentGroundY) {
         bear.y = currentGroundY;
@@ -493,7 +527,7 @@ function updateGame() {
         if (obs.type === 'verticalPlatform' && obs.isRotated) {
             const platTop = obs.y;
             if (bear.x + bear.w * 0.7 > obs.x && bear.x + bear.w * 0.3 < obs.x + obs.w) {
-                if (bear.y + bear.h >= platTop && bear.y + bear.h <= platTop + 30 && bear.vy >= 0) {
+                if (bear.y + bear.h >= platTop && bear.y + bear.h <= platTop + 35 && bear.vy >= 0) {
                     bear.y = platTop - bear.h + GROUND_OFFSET;
                     bear.vy = 0;
                     bear.isGrounded = true;
@@ -502,7 +536,7 @@ function updateGame() {
         }
     });
 
-    // ۲. به‌روزرسانی Honey (فرار از خرس با سرعت ۹۰ تا ۹۵٪ خرس)
+    // ۲. کاراکتر Honey
     if (!isHoneyDeleted) {
         honey.x += honey.speed;
         honey.vy += 0.9;
@@ -515,7 +549,6 @@ function updateGame() {
             honey.isGrounded = true;
         }
 
-        // پرش تصادفی یا عبور از موانع
         if (honey.isGrounded && Math.random() < 0.015) {
             honey.vy = -18;
             honey.isGrounded = false;
@@ -532,14 +565,13 @@ function updateGame() {
             honey.state = honey.runStep ? 'runOpen' : 'runClosed';
         }
 
-        // بررسی گرفتن عسل توسط خرس
         if (checkCollision(bear, honey)) {
             triggerHoneyCaught();
             return;
         }
     }
 
-    // ۳. دوربین و محاسبه مسافت
+    // ۳. دوربین و مسافت
     cameraX = bear.x - 250;
     distanceTraveled = Math.max(distanceTraveled, Math.floor(bear.x / 30));
 
@@ -553,28 +585,21 @@ function updateGame() {
     }
     updateHudDisplay();
 
-    // ۴. مدیریت موانع (Platform و Trap)
+    // ۴. موانع و زنبورها
     updateObstacles();
-
-    // ۵. مدیریت زنبورها (Bees)
     updateBees();
-
-    // ۶. حذف المان‌های خارج از صفحه
     cullOffscreenObjects();
-
-    // ۷. تولید موانع در طول مسیر بی‌پایان
     spawnEndlessTrack();
 
-    // ۸. بررسی انیمیشن مرگ خرس
+    // ۵. بررسی مرگ خرس
     if (bear.state === 'death') {
         bear.deathTimer++;
-        if (bear.deathTimer > 60) { // بعد از ۱ ثانیه
+        if (bear.deathTimer > 60) {
             triggerGameOverSequence();
         }
     }
 }
 
-// برخورد ساده مستطیلی با حاشیه امن
 function checkCollision(r1, r2, padding = 30) {
     return (
         r1.x + padding < r2.x + r2.w - padding &&
@@ -585,39 +610,39 @@ function checkCollision(r1, r2, padding = 30) {
 }
 
 // ==========================================
-// SPAWN & TRACK SYSTEM
+// SPAWN & TRACK
 // ==========================================
 function spawnEndlessTrack() {
     if (bear.x + 1800 > nextSpawnDistance) {
         const rand = Math.random();
 
         if (rand < 0.35) {
-            // ایجاد تله خرس (Bear Trap)
             obstacles.push({
                 type: 'trap',
                 x: nextSpawnDistance,
-                y: GROUND_Y - 80 + GROUND_OFFSET,
+                y: GROUND_Y - 75 + GROUND_OFFSET,
                 w: 110,
-                h: 80
+                h: 75
             });
         } else if (rand < 0.65) {
-            // پلتفرم عمودی که بعد از ۱ ثانیه ۹۰ درجه می‌چرخد
+            // پلتفرم عمودی: در ارتفاع پایین‌تر جهت دسترسی طبیعی
+            const platH = 200;
+            const platW = 65;
             obstacles.push({
                 type: 'verticalPlatform',
                 x: nextSpawnDistance,
-                y: GROUND_Y - 260,
-                w: 70,
-                h: 260,
-                rotation: 0, // رادیان
+                y: GROUND_Y - platH + PLATFORM_Y_OFFSET,
+                w: platW,
+                h: platH,
+                rotation: 0,
                 timer: 0,
                 isRotated: false
             });
         } else if (rand < 0.82) {
-            // زنبور راست (ورود از راست، سر به چپ)
             bees.push({
                 direction: 'right',
                 x: bear.x + 1900,
-                y: GROUND_Y - 220 - Math.random() * 180,
+                y: GROUND_Y - 210 - Math.random() * 160,
                 w: 120,
                 h: 120,
                 vx: -6,
@@ -628,11 +653,10 @@ function spawnEndlessTrack() {
                 deathRot: 0
             });
         } else {
-            // زنبور چپ (ورود از چپ، سر به راست)
             bees.push({
                 direction: 'left',
                 x: cameraX - 200,
-                y: GROUND_Y - 220 - Math.random() * 180,
+                y: GROUND_Y - 210 - Math.random() * 160,
                 w: 120,
                 h: 120,
                 vx: 8,
@@ -652,22 +676,19 @@ function updateObstacles() {
     obstacles.forEach(obs => {
         if (obs.type === 'verticalPlatform') {
             obs.timer += 1 / 60;
-            // بعد از ۱ ثانیه، چرخش نرم ۹۰ درجه تا افقی شدن
             if (obs.timer >= 1.0 && obs.rotation < Math.PI / 2) {
                 obs.rotation += 0.05;
                 if (obs.rotation >= Math.PI / 2) {
                     obs.rotation = Math.PI / 2;
                     obs.isRotated = true;
-                    // تغییر نسبت ابعاد فیزیکی هنگام افقی شدن کامل
-                    obs.w = 260;
-                    obs.h = 70;
+                    obs.w = 200;
+                    obs.h = 65;
                 }
             }
 
-            // برخورد با پلتفرم اگر هنوز عمودی است و مسدودکننده است
-            if (!obs.isRotated && checkCollision(bear, obs, 10)) {
+            if (!obs.isRotated && checkCollision(bear, obs, 15)) {
                 bear.vx = 0;
-                bear.x = obs.x - bear.w + 10;
+                bear.x = obs.x - bear.w + 15;
             }
         } else if (obs.type === 'trap') {
             if (bear.state !== 'death' && checkCollision(bear, obs, 20)) {
@@ -682,32 +703,29 @@ function updateBees() {
         if (!bee.isDying) {
             bee.x += bee.vx;
 
-            // انیمیشن دو مرحله‌ای بال زدن
             bee.wingTimer++;
             if (bee.wingTimer > 6) {
                 bee.wingOpen = !bee.wingOpen;
                 bee.wingTimer = 0;
             }
 
-            // برخورد حمله خرس به زنبور
             if (bear.state === 'attack') {
                 const attackZone = {
                     x: bear.x + 50,
                     y: bear.y - 20,
-                    w: bear.w + 60,
+                    w: bear.w + 70,
                     h: bear.h + 40
                 };
                 if (checkCollision(attackZone, bee, 10)) {
-                    // شروع انیمیشن کارتونی Spoof مرگ زنبور
                     bee.isDying = true;
-                    bee.vy = -14; // پرتاب اولیه به بالا
+                    bee.vy = -14;
                     bee.vx = bee.vx * -0.5;
                 }
             } else if (bear.state !== 'death' && checkCollision(bear, bee, 25)) {
                 triggerBearDeath();
             }
         } else {
-            // انیمیشن مرگ: چرخش ۱۸۰ درجه، بالا رفتن و سقوط کمدی به پایین
+            // انیمیشن کارتونی Spoof مرگ زنبور: چرخش ۱۸۰ درجه و سقوط
             bee.x += bee.vx;
             bee.vy += 0.8;
             bee.y += bee.vy;
@@ -730,13 +748,9 @@ function triggerBearDeath() {
     bear.deathTimer = 0;
 }
 
-function triggerBearCaughtHoney() {
-    bear.state = 'catchHoney';
-    isHoneyDeleted = true; // عسل کاملاً دیلیت می‌شود
-}
-
 function triggerHoneyCaught() {
-    triggerBearCaughtHoney();
+    bear.state = 'catchHoney';
+    isHoneyDeleted = true;
     currentState = STATES.HONEY_CAUGHT;
     setTimeout(() => {
         playMotion(ASSETS.videos.honeyCatch, () => {
@@ -766,15 +780,14 @@ function updateHudDisplay() {
 }
 
 // ==========================================
-// RENDERING (CANVAS 16:9 & SCENERY)
+// RENDERING
 // ==========================================
 function render() {
     ctx.clearRect(0, 0, V_WIDTH, V_HEIGHT);
 
-    // ۱. ترسیم بک‌گراند بی‌پایان و تکرارشونده
+    // بک‌گراند بی‌پایان
     const bgImg = getImage(ASSETS.background);
     if (bgImg) {
-        // پس‌زمینه قرینه و تکرارشونده ۱۶:۹ با سرعت پارالاکس نرم
         const bgOffset = (cameraX * 0.5) % V_WIDTH;
         ctx.drawImage(bgImg, -bgOffset, 0, V_WIDTH, V_HEIGHT);
         ctx.drawImage(bgImg, V_WIDTH - bgOffset, 0, V_WIDTH, V_HEIGHT);
@@ -782,7 +795,6 @@ function render() {
             ctx.drawImage(bgImg, -bgOffset - V_WIDTH, 0, V_WIDTH, V_HEIGHT);
         }
     } else {
-        // بک‌گراند پشتیبان در صورت عدم قرار دادن تصویر
         ctx.fillStyle = '#1e3c20';
         ctx.fillRect(0, 0, V_WIDTH, V_HEIGHT);
         ctx.fillStyle = '#142816';
@@ -790,10 +802,9 @@ function render() {
     }
 
     ctx.save();
-    // انتقال مختصات بوم با توجه به موقعیت دوربین
     ctx.translate(-cameraX, 0);
 
-    // ۲. ترسیم موانع (Obstacles)
+    // ترسیم موانع
     obstacles.forEach(obs => {
         if (obs.type === 'trap') {
             const trapImg = getImage(ASSETS.obstacles.trap);
@@ -806,19 +817,19 @@ function render() {
         } else if (obs.type === 'verticalPlatform') {
             const platImg = getImage(ASSETS.obstacles.verticalPlatform);
             ctx.save();
-            ctx.translate(obs.x + 35, obs.y + 130);
+            ctx.translate(obs.x + obs.w / 2, obs.y + obs.h / 2);
             ctx.rotate(obs.rotation);
             if (platImg) {
-                ctx.drawImage(platImg, -35, -130, 70, 260);
+                ctx.drawImage(platImg, -obs.w / 2, -obs.h / 2, obs.w, obs.h);
             } else {
                 ctx.fillStyle = '#654321';
-                ctx.fillRect(-35, -130, 70, 260);
+                ctx.fillRect(-obs.w / 2, -obs.h / 2, obs.w, obs.h);
             }
             ctx.restore();
         }
     });
 
-    // ۳. ترسیم Honey (اگر دیلیت نشده باشد)
+    // ترسیم Honey
     if (!isHoneyDeleted) {
         let honeyImgKey = ASSETS.honey.runOpen;
         if (honey.state === 'runClosed') honeyImgKey = ASSETS.honey.runClosed;
@@ -834,7 +845,7 @@ function render() {
         }
     }
 
-    // ۴. ترسیم زنبورها (Bees)
+    // ترسیم Bees
     bees.forEach(bee => {
         let beeImgKey = '';
         if (bee.direction === 'left') {
@@ -858,7 +869,7 @@ function render() {
         ctx.restore();
     });
 
-    // ۵. ترسیم Bear
+    // ترسیم Bear
     let bearImgKey = ASSETS.bear.idle;
     if (bear.state === 'runOpen') bearImgKey = ASSETS.bear.runOpen;
     else if (bear.state === 'runClosed') bearImgKey = ASSETS.bear.runClosed;
@@ -879,7 +890,7 @@ function render() {
 }
 
 // ==========================================
-// MAIN GAME LOOP
+// LOOP
 // ==========================================
 function gameLoop() {
     updateGame();
@@ -887,5 +898,4 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
-// شروع حلقه انیمیشن
 requestAnimationFrame(gameLoop);
