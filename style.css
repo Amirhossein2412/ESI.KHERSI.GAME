@@ -13,14 +13,14 @@ html, body {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background-color: #0d0e15;
+    background-color: #0c0d14;
     font-family: 'Vazirmatn', 'Fredoka', cursive, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* ظرف اصلی با نسبت ابعاد 16:9 */
+/* نسبت ابعاد دقیق 16:9 و ریسپانسیو */
 #game-wrapper {
     position: relative;
     width: 100vw;
@@ -29,7 +29,7 @@ html, body {
     max-width: 177.78vh; /* 16:9 */
     background: #000;
     overflow: hidden;
-    box-shadow: 0 0 40px rgba(0,0,0,0.8);
+    box-shadow: 0 0 50px rgba(0,0,0,0.9);
 }
 
 #gameCanvas {
@@ -39,10 +39,33 @@ html, body {
     width: 100%;
     height: 100%;
     display: block;
-    image-rendering: auto;
 }
 
-/* لایه‌های روی بوم (Overlay Screens) */
+/* دکمه تمام صفحه */
+.fullscreen-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 45;
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid #ffcc00;
+    color: #ffcc00;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    backdrop-filter: blur(5px);
+    transition: transform 0.15s, background 0.15s;
+}
+
+.fullscreen-btn:hover {
+    transform: scale(1.1);
+    background: rgba(255, 204, 0, 0.25);
+}
+
 .overlay-screen {
     position: absolute;
     inset: 0;
@@ -57,7 +80,7 @@ html, body {
     display: none !important;
 }
 
-/* صفحه لودینگ */
+/* لودینگ */
 #loading-screen {
     background: #111424;
     color: #fff;
@@ -69,11 +92,11 @@ html, body {
 }
 
 .loader-bar {
-    width: 320px;
-    height: 20px;
+    width: 300px;
+    height: 18px;
     background: rgba(255,255,255,0.1);
-    border-radius: 10px;
-    margin-top: 15px;
+    border-radius: 12px;
+    margin: 15px auto 0;
     overflow: hidden;
     border: 2px solid #ffcc00;
 }
@@ -85,7 +108,7 @@ html, body {
     transition: width 0.2s ease;
 }
 
-/* منوی اصلی - افکت تیره و بلور روی بک‌گراند */
+/* منوی اصلی - بلور روی بک‌گراند اصلی */
 #main-menu {
     background: rgba(0, 0, 0, 0.45);
     backdrop-filter: blur(12px);
@@ -96,28 +119,28 @@ html, body {
 .menu-buttons-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 3vmin;
+    gap: 4.5vmin;
     justify-items: center;
     align-items: center;
 }
 
-/* دکمه‌های منو که با Assetهای 1024x1024 پر می‌شوند */
+/* بزرگ‌تر شدن آیکون‌های منوی اصلی طبق درخواست */
 .asset-btn {
-    width: 16vmin;
-    height: 16vmin;
+    width: clamp(105px, 22vmin, 220px);
+    height: clamp(105px, 22vmin, 220px);
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
     background-color: transparent;
     border: none;
     cursor: pointer;
-    filter: drop-shadow(0 6px 12px rgba(0,0,0,0.5));
+    filter: drop-shadow(0 8px 16px rgba(0,0,0,0.6));
     transition: transform 0.15s ease, filter 0.15s ease;
 }
 
 .asset-btn:hover {
     transform: scale(1.08) translateY(-4px);
-    filter: drop-shadow(0 10px 18px rgba(255, 204, 0, 0.6));
+    filter: drop-shadow(0 12px 22px rgba(255, 204, 0, 0.7));
 }
 
 .asset-btn:active {
@@ -140,11 +163,11 @@ html, body {
     position: absolute;
     bottom: 25px;
     right: 35px;
-    padding: 10px 22px;
+    padding: 10px 24px;
     font-size: 1.1rem;
     font-family: inherit;
     font-weight: 700;
-    background: rgba(0,0,0,0.65);
+    background: rgba(0,0,0,0.7);
     color: #fff;
     border: 2px solid #ffcc00;
     border-radius: 30px;
@@ -152,7 +175,7 @@ html, body {
     backdrop-filter: blur(5px);
 }
 
-/* HUD و نمایش رکورد */
+/* HUD */
 #hud {
     position: absolute;
     top: 20px;
@@ -166,10 +189,10 @@ html, body {
 }
 
 .record-box {
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.65);
     border: 3px solid #ffaa00;
     border-radius: 18px;
-    padding: 10px 22px;
+    padding: 8px 20px;
     color: #fff;
     font-size: clamp(1rem, 2.2vmin, 1.8rem);
     font-weight: 900;
@@ -196,7 +219,7 @@ html, body {
 
 /* صفحه Game Over */
 #game-over-screen {
-    background: rgba(10, 5, 0, 0.75);
+    background: rgba(10, 5, 0, 0.8);
     backdrop-filter: blur(8px);
     z-index: 30;
 }
@@ -205,51 +228,65 @@ html, body {
     background: #1b1c2b;
     border: 5px solid #ff3366;
     border-radius: 28px;
-    padding: 30px 50px;
+    padding: 30px 45px;
     text-align: center;
     color: #fff;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.85);
 }
 
 .modal-box h1 {
     font-size: clamp(2rem, 4.5vmin, 3.5rem);
     color: #ff3366;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     text-shadow: 3px 3px 0 #000;
 }
 
 .result-stats p {
     font-size: clamp(1.2rem, 2.5vmin, 1.8rem);
-    margin: 12px 0;
+    margin: 10px 0;
     font-weight: 700;
 }
 
-.cartoon-btn {
+.game-over-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
     margin-top: 25px;
-    padding: 14px 40px;
+}
+
+.cartoon-btn {
+    padding: 12px 30px;
     font-family: inherit;
-    font-size: clamp(1.2rem, 2.8vmin, 2rem);
+    font-size: clamp(1.1rem, 2.5vmin, 1.8rem);
     font-weight: 900;
     background: linear-gradient(180deg, #ffcc00, #ff8800);
     color: #3b1800;
-    border: 4px solid #fff;
+    border: 3px solid #fff;
     border-radius: 50px;
     cursor: pointer;
-    box-shadow: 0 8px 0 #b35f00, 0 15px 25px rgba(0,0,0,0.5);
+    box-shadow: 0 6px 0 #b35f00, 0 12px 20px rgba(0,0,0,0.5);
     transition: transform 0.1s, box-shadow 0.1s;
 }
 
-.cartoon-btn:active {
-    transform: translateY(6px);
-    box-shadow: 0 2px 0 #b35f00, 0 5px 10px rgba(0,0,0,0.5);
+.secondary-btn {
+    background: linear-gradient(180deg, #4da6ff, #0066cc);
+    color: #fff;
+    box-shadow: 0 6px 0 #004080, 0 12px 20px rgba(0,0,0,0.5);
 }
 
-/* کنترل‌های موبایل */
+.cartoon-btn:active {
+    transform: translateY(5px);
+    box-shadow: 0 1px 0 #b35f00;
+}
+
+/* ========================================================
+   کنترل‌های موبایل دقیقاً طبق عکس ارسالی (روی خط چمن پایین)
+   ======================================================== */
 #mobile-controls {
     position: absolute;
-    bottom: 20px;
-    left: 20px;
-    right: 20px;
+    bottom: 2vmin;
+    left: 3.5vmin;
+    right: 3.5vmin;
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
@@ -259,26 +296,25 @@ html, body {
 
 .mobile-group {
     display: flex;
-    gap: 16px;
+    gap: 2vmin;
     pointer-events: auto;
 }
 
 .mobile-btn {
-    width: clamp(65px, 12vmin, 120px);
-    height: clamp(65px, 12vmin, 120px);
+    width: clamp(55px, 9.5vmin, 100px);
+    height: clamp(55px, 9.5vmin, 100px);
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
-    background-color: rgba(255, 255, 255, 0.15);
-    border: 3px solid rgba(255, 255, 255, 0.4);
-    border-radius: 50%;
-    backdrop-filter: blur(6px);
+    background-color: transparent; /* کاملاً شفاف برای قرارگیری تمیز دکمه‌های گرد چوبی شما */
+    border: none;
+    outline: none;
     cursor: pointer;
     touch-action: manipulation;
-    transition: transform 0.08s ease, background-color 0.08s;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+    transition: transform 0.08s ease;
 }
 
 .mobile-btn:active {
     transform: scale(0.88);
-    background-color: rgba(255, 204, 0, 0.4);
 }
