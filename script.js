@@ -66,8 +66,8 @@ const ASSETS = {
 
 // لینک‌های حمایت و دونیت جهت باز شدن در تب جدید
 const DONATE_LINKS = {
-    creator: "",
-    asiKhersi: ""
+    creator: "https://donofa.ir/nightvex",
+    asiKhersi: "https://sibmo.ir/esi.khersi"
 };
 
 // ==========================================
