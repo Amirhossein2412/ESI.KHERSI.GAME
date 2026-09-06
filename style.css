@@ -292,12 +292,14 @@ html, body {
     align-items: flex-end;
     pointer-events: none;
     z-index: 18;
+    direction: ltr !important; /* این خط باعث می‌شود جهت دکمه‌ها در فارسی برعکس نشود */
 }
 
 .mobile-group {
     display: flex;
     gap: 2vmin;
     pointer-events: auto;
+    direction: ltr !important; /* چیدمان دکمه‌های داخل هر دسته نیز همیشه چپ به راست می‌ماند */
 }
 
 .mobile-btn {
