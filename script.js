@@ -84,7 +84,13 @@ const GROUND_Y = V_HEIGHT - GROUND_HEIGHT; // 960px
 const GROUND_OFFSET = 30; 
 
 // آفست ارتفاع پلتفرم: پایین‌تر قرار گرفتن پلتفرم تا دسترس باشد
-const PLATFORM_Y_OFFSET = 120; 
+const PLATFORM_Y_OFFSET = 125; 
+
+// تشخیص دستگاه موبایل / تبلت لمسی
+const isMobile = ('ontouchstart' in window || navigator.maxTouchPoints > 0 || window.innerWidth <= 900);
+
+// ضریب سرعت برای موبایل (0.75 یعنی سرعت تمام کاراکترها در موبایل 25% آرام‌تر می‌شود)
+const SPEED_MULT = isMobile ? 0.75 : 1.0;
 
 // فقط همین ۶ وضعیت مجاز طبق پرامپت
 const STATES = {
@@ -243,7 +249,7 @@ const bear = {
     h: 220,
     vx: 0,
     vy: 0,
-    speed: 10,
+    speed: 10 * SPEED_MULT, // سرعت در موبایل به طور خودکار کمتر می‌شود
     isGrounded: false,
     state: 'idle',
     attackTimer: 0,
@@ -259,7 +265,7 @@ const honey = {
     h: 160,
     vx: 0,
     vy: 0,
-    speed: 9.2, // ۹۰ تا ۹۵ درصد سرعت خرس
+    speed: 9.2 * SPEED_MULT, // سرعت در موبایل به طور خودکار کمتر می‌شود // ۹۰ تا ۹۵ درصد سرعت خرس
     isGrounded: false,
     state: 'runOpen',
     runAnimTimer: 0,
@@ -645,7 +651,7 @@ function spawnEndlessTrack() {
                 y: GROUND_Y - 210 - Math.random() * 160,
                 w: 120,
                 h: 120,
-                vx: -6,
+                vx: -6 * SPEED_MULT, // ضرب سرعت زنبور در ضریب موبایل
                 vy: 0,
                 wingTimer: 0,
                 wingOpen: true,
@@ -659,7 +665,7 @@ function spawnEndlessTrack() {
                 y: GROUND_Y - 210 - Math.random() * 160,
                 w: 120,
                 h: 120,
-                vx: 8,
+                vx: 8 * SPEED_MULT, // ضرب سرعت زنبور در ضریب موبایل
                 vy: 0,
                 wingTimer: 0,
                 wingOpen: true,
