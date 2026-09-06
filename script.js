@@ -8,10 +8,10 @@ const ASSETS = {
 
     // موشن گرافیک‌های ویدیویی ۱۶:۹
     videos: {
-        creatorIntro: "https://uupload.ir/view/brown_bear_eating_honey_202608312215_h6j4.mp4/", // موشن ۱۰ ثانیه‌ای سازنده
-        storyMotion: "https://uupload.ir/view/461d9501-976e-4e70-8bfb-f2df01d5e309_4ct6.mp4/",  // موشن داستانی قبل از شروع گیم‌پلی
-        honeyCatch: "https://uupload.ir/view/461d9501-976e-4e70-8bfb-f2df01d5e309_1_5iqq.mp4/",   // موشن هنگام گرفتن عسل
-        gameOver: "https://uupload.ir/view/461d9501-976e-4e70-8bfb-f2df01d5e309_2_1m1n.mp4/"      // موشن گیم اور بعد از مرگ خرس
+        creatorIntro: "video1", // موشن ۱۰ ثانیه‌ای سازنده
+        storyMotion: "video2",  // موشن داستانی قبل از شروع گیم‌پلی
+        honeyCatch: "video3",   // موشن هنگام گرفتن عسل
+        gameOver: "video4"      // موشن گیم اور بعد از مرگ خرس
     },
 
     // شخصیت Bear (تصاویر PNG 1024x1024)
