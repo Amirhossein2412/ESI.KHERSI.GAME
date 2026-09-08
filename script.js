@@ -6,8 +6,9 @@ const ASSETS = {
     // تصویر بک‌گراند ۱۶:۹ جنگل کارتونی
     background: "back.jpg",
 
-    // موشن گرافیک‌های ویدیویی (نام فایل‌ها در مخزن گیتهاب، مثلاً intro.mp4)
-        videos: "video1.mp4", // موشن ۱۰ ثانیه‌ای سازنده
+    // موشن گرافیک‌های ویدیویی (اصلاح‌شده با آکولاد و کلید creatorIntro)
+    videos: {
+        creatorIntro: "video1.mp4", // موشن ۱۰ ثانیه‌ای سازنده
         storyMotion: "video2.mp4",  // موشن داستانی قبل از شروع گیم‌پلی
         honeyCatch: "video3.mp4",   // موشن هنگام گرفتن عسل
         gameOver: "video4.mp4"      // موشن گیم اور بعد از مرگ خرس
