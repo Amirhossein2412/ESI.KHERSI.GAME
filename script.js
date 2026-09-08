@@ -27,9 +27,9 @@ const ASSETS = {
 
     // شخصیت Honey (تصاویر PNG 1024x1024)
     honey: {
-        idle: "honyidle.png",
+        idle: "honyclose.png",
         runOpen: "honyopen.png",
-        runClosed: "honyclose.png",
+        runClosed: "honyidle.png",
         jump: "honyjump.png"
     },
 
