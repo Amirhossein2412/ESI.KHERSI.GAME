@@ -321,3 +321,45 @@ html, body {
     transform: scale(0.88);
     direction: ltr !important; /* چیدمان دکمه‌های داخل هر دسته نیز همیشه چپ به راست می‌ماند */
 }
+/* ========================================================
+   کنترل‌های موبایل (ثابت ماندن دقیق در هر دو حالت RTL و LTR)
+   ======================================================== */
+#mobile-controls {
+    position: absolute;
+    bottom: 2vmin;
+    left: 3.5vmin;
+    right: 3.5vmin;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    pointer-events: none;
+    z-index: 18;
+    direction: ltr !important; /* قفل کردن جهت کل کنترل‌ها از چپ به راست */
+}
+
+.mobile-group {
+    display: flex;
+    gap: 2vmin;
+    pointer-events: auto;
+    direction: ltr !important; /* قفل کردن دکمه‌های داخل هر دسته از چپ به راست */
+    flex-direction: row !important;
+}
+
+.mobile-btn {
+    width: clamp(55px, 9.5vmin, 100px);
+    height: clamp(55px, 9.5vmin, 100px);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    touch-action: manipulation;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+    transition: transform 0.08s ease;
+}
+
+.mobile-btn:active {
+    transform: scale(0.88);
+}
