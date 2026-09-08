@@ -4,7 +4,7 @@
 // ===============================
 const ASSETS = {
     // تصویر بک‌گراند ۱۶:۹ جنگل کارتونی
-    background: "https://s6.uupload.ir/files/89b49617-1fe6-4b2b-813a-4adc01364f06_4qqs.jpg",
+    background: "back.jpg",
 
     // موشن گرافیک‌های ویدیویی (نام فایل‌ها در مخزن گیتهاب، مثلاً intro.mp4)
         videos: "video1.mp4", // موشن ۱۰ ثانیه‌ای سازنده
@@ -15,51 +15,51 @@ const ASSETS = {
 
     // شخصیت Bear (تصاویر PNG 1024x1024)
     bear: {
-        idle: "https://s6.uupload.ir/files/995fc50c-f305-4d9d-b0f5-fe7a61ac0181_58d.png",
-        runOpen: "https://s6.uupload.ir/files/deae8050-3d89-416d-91ce-0ab825b5c2b1_qftk.png",
-        runClosed: "https://s6.uupload.ir/files/fcfa74cb-2d56-46ce-bf20-79cf6105069c_xcpb.png",
-        jump: "https://s6.uupload.ir/files/ce181504-b968-485e-b3a0-cc278efd25f0_s3gs.png",
-        attack: "https://s6.uupload.ir/files/fad410cb-7b51-40a2-898c-c1b75cf4b4f3_c5t.png",
-        death: "https://s6.uupload.ir/files/c432c6e0-c906-40c6-bd70-84e4df86f1da_zelp.png",
-        catchHoney: "https://s6.uupload.ir/files/817516f5-984b-4903-9c00-38b119da860f_ui3f.png"
+        idle: "bearidle.png",
+        runOpen: "bearopen.png",
+        runClosed: "bearclose.png",
+        jump: "bearjump.png",
+        attack: "bearattack.png",
+        death: "beardead.png",
+        catchHoney: "catchhony.png"
     },
 
     // شخصیت Honey (تصاویر PNG 1024x1024)
     honey: {
-        idle: "https://s6.uupload.ir/files/gemini_generated_image_3hitrt3hitrt3hit_sfch.png",
-        runOpen: "https://s6.uupload.ir/files/gemini_generated_image_yon6z8yon6z8yon6_xsm7.png",
-        runClosed: "https://s6.uupload.ir/files/gemini_generated_image_ib7onyib7onyib7o_yg62.png",
-        jump: "https://s6.uupload.ir/files/55e14a28-857e-41d3-ba5e-3257cf2f09ae_yqj.png"
+        idle: "honyidle.png",
+        runOpen: "honyopen.png",
+        runClosed: "honyclose.png",
+        jump: "honyjump.png"
     },
 
     // دشمن Bee (تصاویر PNG 1024x1024)
     bee: {
-        wingOpenLeft: "https://s6.uupload.ir/files/8d594266-f0f1-4d5b-9599-a5ba64c191061_nnln.png",
-        wingClosedLeft: "https://s6.uupload.ir/files/b51f50b8-0f0a-48da-8334-e436332b1650_vkjx.png",
-        wingOpenRight: "https://s6.uupload.ir/files/8d594266-f0f1-4d5b-9599-a5ba64c19106_10c.png",
-        wingClosedRight: "https://s6.uupload.ir/files/b51f50b8-0f0a-48da-8334-e436332b16501_5xtw.png"
+        wingOpenLeft: "openleft.png",
+        wingClosedLeft: "closeleft.png",
+        wingOpenRight: "openright.png",
+        wingClosedRight: "closeright.png"
     },
 
     // موانع (تصاویر PNG 1024x1024)
     obstacles: {
-        trap: "https://s6.uupload.ir/files/f30d1c9a-f300-48c3-9557-a9b23b8f36cd_oaqi.png",
-        verticalPlatform: "https://s6.uupload.ir/files/83ef3131-82cf-4eb2-a013-b9f3c4f004c7_qrrs.png" // تصویر عمودی پلتفرم که در کد ۹۰ درجه می‌چرخد
+        trap: "trap.png",
+        verticalPlatform: "platforn.png" // تصویر عمودی پلتفرم که در کد ۹۰ درجه می‌چرخد
     },
 
     // دکمه‌های منوی اصلی (تصاویر PNG 1024x1024)
     menuButtons: {
-        start: "https://s6.uupload.ir/files/4b1fae6b-ba81-4021-a4b0-45d85d34d7c2_gak6.png",
-        supportCreator: "https://s6.uupload.ir/files/b2c4f5c0-c8f5-40b1-ac7e-facfccd314b1_qu18.png",
-        supportAsiKhersi: "https://s6.uupload.ir/files/2046cf6e-d795-4639-8e5e-c4e4756276f4_okla.png",
-        language: "https://s6.uupload.ir/files/1a45ddb3-2ff4-4f51-b110-5abd598a1841_s9vw.png"
+        start: "start.png",
+        supportCreator: "creatorsupport.png",
+        supportAsiKhersi: "esisupport.png",
+        language: "language.png"
     },
 
     // آیکون دکمه‌های لمسی موبایل (مطابق با ترتیب و تصویر ارسالی)
     mobileButtons: {
-        left: "https://s6.uupload.ir/files/f97eb6cf-fbaa-4171-91d2-c3760e3e4c42_xfp6.png",
-        right: "https://s6.uupload.ir/files/2e83daed-6c83-4ec4-a624-d61b618f01ed_euqw.png",
-        jump: "https://s6.uupload.ir/files/e4258620-06a3-441b-bc1a-304c35276f0d_oz1e.png",
-        attack: "https://s6.uupload.ir/files/70d5edc2-2c6c-41d8-9d92-d10649d359bb_37pe.png"
+        left: "left.png",
+        right: "right.png",
+        jump: "up.png",
+        attack: "attack.png"
     }
 };
 
