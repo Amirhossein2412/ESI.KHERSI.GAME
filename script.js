@@ -43,7 +43,7 @@ const ASSETS = {
 
     // موانع (تصاویر PNG 1024x1024)
     obstacles: {
-        trap: "trap.png",
+        trap: "platforn.png",
         verticalPlatform: "platform.png" // تصویر عمودی پلتفرم که در کد ۹۰ درجه می‌چرخد
     },
 
