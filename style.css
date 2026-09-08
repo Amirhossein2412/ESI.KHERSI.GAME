@@ -76,6 +76,7 @@ html, body {
     transition: opacity 0.3s ease;
 }
 
+.hidden,
 .overlay-screen.hidden {
     display: none !important;
 }
